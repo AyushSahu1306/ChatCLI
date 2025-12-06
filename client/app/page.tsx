@@ -5,11 +5,20 @@ import { Spinner } from "@/components/ui/spinner";
 import { authClient } from "@/lib/auth-client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
 
   const {data,isPending,} = authClient.useSession();
   const router = useRouter();
+  
+
+  useEffect(() => {
+    if(!isPending && !data?.session && !data?.user){
+     router.push("/sign-in");
+    }
+  },[isPending,data,router])
+
 
   if(isPending){
     return (
@@ -18,10 +27,6 @@ export default function Home() {
       </div>
     )
   }
-
-   if(!data?.session && !data?.user){
-    router.push("/sign-in");
-   }
 
   
 
